@@ -45,6 +45,7 @@ if __name__ == "__main__":
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     client.connect(ADDR)
 
+    #get username first then start client chat
     username = valid_username("Enter your username: ")
     sendUsername(username)
     clientStart()

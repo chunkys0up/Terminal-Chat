@@ -16,24 +16,28 @@ def handle_client(conn, addr):
     # Receive username length first
     username_length = conn.recv(HEADER).decode(FORMAT)
     if username_length:
-        username_length = int(username_length.strip())  # Ensure it's an int
-        username = conn.recv(username_length).decode(FORMAT)  # Get username
+        username_length = int(username_length.strip())  
+         # Get username
+        username = conn.recv(username_length).decode(FORMAT) 
         print(f"\n[NEW CONNECTION] {username} connected.")
-        conn.send("Username received".encode(FORMAT))  # Acknowledge username
+        # Send acknowledgment
+        conn.send("Username received".encode(FORMAT))  
 
     connected = True
     while connected:
         msg_length = conn.recv(HEADER).decode(FORMAT)
         if msg_length:
-            msg_length = int(msg_length.strip())  # Convert to integer
-            msg = conn.recv(msg_length).decode(FORMAT)  # Receive message
+            msg_length = int(msg_length.strip())  
+            msg = conn.recv(msg_length).decode(FORMAT)  
 
             if msg in DISCONNECT_COMMANDS:
                 connected = False
                 print(f"[DISCONNECTED] {username} has left the chat.")
             else:
-                print(f"{username}: {msg}")  # Print message with username
-                conn.send("Msg received".encode(FORMAT))  # Send acknowledgment
+                 # Print message with username
+                print(f"{username}: {msg}") 
+                 # Send acknowledgment
+                conn.send("Msg received".encode(FORMAT)) 
 
     conn.close()
 
