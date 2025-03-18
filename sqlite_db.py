@@ -4,7 +4,7 @@ import sqlite3
 conn = sqlite3.connect("terminal_conversation.db")
 cur = conn.cursor()
 
-#data will keep on duplicating unless you clear the database each time you run this sqliteserver
+# data will keep on duplicating unless you clear the database each time you run this sqliteserver
 cur.execute("DELETE FROM terminal_conversation")
 conn.commit()
 
@@ -18,8 +18,10 @@ def addQuery(name: str, msg: str):
     conn.commit()
 
 
-def clientSideHistory():
-    for row in cur.execute("SELECT * FROM terminal_conversation"):
+def clientSideHistory(username: str):
+    cur.execute("SELECT * FROM terminal_conversation WHERE sender = ?", (username,))
+    rows = cur.fetchall()
+    for row in rows:
         print(row)
 
 
@@ -27,11 +29,5 @@ def printMessages():
     res = cur.execute("SELECT * FROM terminal_conversation")
     print(res.fetchall())
 
-
-addQuery("Andrew", "You free sat?")
-addQuery("John", "No")
-addQuery("Andrew", "ok")
-
-clientSideHistory()
 
 conn.close()

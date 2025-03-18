@@ -1,5 +1,6 @@
 import socket
 from Display_Config import *
+import sqlite_db
 
 HEADER = 64
 PORT = 5050
@@ -9,6 +10,8 @@ FORMAT = 'utf-8'
 DISCONNECT_COMMANDS = ("/dc", "/disconnect")
 
 # Encode input and its length
+
+
 def encode(input_str: str):
     input_encoded = input_str.encode(FORMAT)
     send_length = str(len(input_encoded)).encode(FORMAT)
@@ -28,7 +31,7 @@ def send(msg: str):
     send_length, message = encode(msg)
     client.send(send_length)
     client.send(message)
-    print(client.recv(1000).decode(FORMAT))
+    colored_text(client.recv(1000).decode(FORMAT))
 
 
 def clientStart():
@@ -37,6 +40,8 @@ def clientStart():
         msg = input("Input message (/dc or /disconnect to exit): ")
         if msg in DISCONNECT_COMMANDS:
             connected = False
+        elif msg == "/history":
+            sqlite_db.clientSideHistory()
 
         send(msg)
 
@@ -45,7 +50,7 @@ if __name__ == "__main__":
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     client.connect(ADDR)
 
-    #get username first then start client chat
+    # get username first then start client chat
     username = valid_username("Enter your username: ")
     sendUsername(username)
     clientStart()

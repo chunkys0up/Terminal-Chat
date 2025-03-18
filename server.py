@@ -1,5 +1,6 @@
 import socket
 import threading
+import sqlite_db
 
 # Set up
 HEADER = 64
@@ -36,6 +37,8 @@ def handle_client(conn, addr):
             else:
                  # Print message with username
                 print(f"{username}: {msg}") 
+                #add to db
+                sqlite_db.addQuery(username, msg)
                  # Send acknowledgment
                 conn.send("Msg received".encode(FORMAT)) 
 
